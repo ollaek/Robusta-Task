@@ -1,16 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import MovieCard from "./MovieCard";
+import {useMoviesHook} from "../../hooks/useMoviesHook";
 
 const MoviesList = () => {
-  let movies = JSON.parse(localStorage.getItem("movies") || "[]");
+  const { movies, getMovies } = useMoviesHook();
+
+  useEffect(()=>{
+      getMovies();
+  },
+  //
+  []);
 
   const RenderList = () => {
     if (movies.length > 0) {
       return (
         <div className="ui grid ">
           {movies.map(movie => {
-            return <MovieCard movie={movie} />;
+            return <MovieCard movie={movie} key={movie.id}/>;
           })}
         </div>
       );
@@ -29,7 +36,7 @@ const MoviesList = () => {
           className="ui right labeled icon button right floated"
           style={{ marginBottom: 15 }}
         >
-          <i class="right plus icon"></i>
+          <i className="right plus icon"></i>
           add
         </Link>
       </div>

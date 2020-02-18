@@ -5,21 +5,21 @@ const MovieCard = ({ movie }) => {
     <div className="three wide column" style={{ textAlign: "center" }}>
       <div className="ui card">
         <div className="content">
-          <div className="header">{movie.Name}</div>
+          <div className="header">{movie.title}</div>
         </div>
         <div className="content">
           <div className="ui small feed">
             <div className="event">
               <div className="content">
                 <div className="summary">
-                  <a href="/">Year : </a> {movie.Year}
+                  <a href="/">Year : </a> {movie.year}
                 </div>
               </div>
             </div>
             <div className="event">
               <div className="content">
                 <div className="summary">
-                  <a href="/">Budget : </a> {movie.Budget} $
+                  <a href="/">Budget : </a> {movie.budget} $
                 </div>
               </div>
             </div>
