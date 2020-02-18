@@ -1,11 +1,37 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
+import { useDeleteMovieHook } from "../../hooks";
 
 const MovieCard = ({ movie }) => {
+  const { deleteMovie } = useDeleteMovieHook();
+  
+  const DeleteMovie = () => {
+    if (window.confirm(`Are you sure you want to delete ${movie.title} ?`)) {
+      deleteMovie(movie.id);
+    }
+  };
   return (
     <div className="three wide column" style={{ textAlign: "center" }}>
       <div className="ui card">
         <div className="content">
           <div className="header">{movie.title}</div>
+          <span
+            data-tooltip="Edit"
+            data-position="left center"
+            onClick={() => {
+              alert("hi");
+            }}
+          >
+            <i className="pencil alternate icon"></i>
+          </span>
+          <span
+            data-tooltip="Delete"
+            data-position="right center"
+            onClick={() => DeleteMovie()}
+          >
+            <i className="trash alternate icon"></i>
+          </span>
         </div>
         <div className="content">
           <div className="ui small feed">

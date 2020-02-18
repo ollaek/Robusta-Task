@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { MoviesServices } from "../services/MoviesService";
+import { getMoviesService } from "../services";
 
 const useMoviesHook = () => {
   const initialState = [];
@@ -8,7 +8,7 @@ const useMoviesHook = () => {
   const [movies, setMovies] = useState(initialState);
 
   const getMovies = () => {
-    MoviesServices().then(res => {
+    getMoviesService().then(res => {
       setMovies(res);
     });
   };

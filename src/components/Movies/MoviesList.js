@@ -1,23 +1,29 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import MovieCard from "./MovieCard";
-import {useMoviesHook} from "../../hooks/useMoviesHook";
+import { useMoviesHook } from "../../hooks";
 
 const MoviesList = () => {
   const { movies, getMovies } = useMoviesHook();
 
-  useEffect(()=>{
+  useEffect(
+    () => {
       getMovies();
-  },
-  //
-  []);
+    },
+    // eslint-disable-next-line
+    []
+  );
 
   const RenderList = () => {
     if (movies.length > 0) {
       return (
         <div className="ui grid ">
           {movies.map(movie => {
-            return <MovieCard movie={movie} key={movie.id}/>;
+            return (
+              
+                <MovieCard movie={movie} key={movie.id} />
+                
+            );
           })}
         </div>
       );
@@ -40,7 +46,7 @@ const MoviesList = () => {
           add
         </Link>
       </div>
-      {RenderList()}
+      {movies && RenderList()}
     </div>
   );
 };

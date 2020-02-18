@@ -1,6 +1,6 @@
 import { moviesApi } from "../apis/moviesApi";
 
-export const MoviesServices = async () => {
+export const getMoviesService = async () => {
     const data =  await moviesApi.getAllMovies();
     return data;
 };

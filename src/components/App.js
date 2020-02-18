@@ -6,10 +6,11 @@ import {
   Redirect
 } from "react-router-dom";
 
-import Loader from "./shared/Loader";
+import Loader from "./Shared/Loader";
 
 const MoviesList = lazy(() => import("./Movies/MoviesList"));
 const CreateMovie = lazy(() => import("./Movies/CreateMovie"));
+const EditMovie = lazy(()=> import("./Movies/MovieDetails"));
 
 const App = () => (
   <Router>
@@ -17,6 +18,7 @@ const App = () => (
       <Switch>
         <Route exact path="/" component={MoviesList} />
         <Route path="/Create" component={CreateMovie} />
+        <Route path="/Edit/:id" component={EditMovie}/>
         <Redirect to="/" />
       </Switch>
     </Suspense>

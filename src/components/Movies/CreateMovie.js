@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
+import { useCreateMovieHook, useCategoriesHook } from "../../hooks";
+
 const CreateMovie = ({ history }) => {
+  const { createMovie } = useCreateMovieHook();
+  const { categories, getCategories } = useCategoriesHook();
+  const [genres, setGenres] = useState([]);
+  useEffect(
+    () => {
+      getCategories();
+    },
+    // eslint-disable-next-line
+
+    []
+  );
   const ValidationSchema = Yup.object().shape({
-    name: Yup.string().required("Please enter a name"),
+    title: Yup.string().required("Please enter a title"),
     year: Yup.number()
       .min(1800, "Year must be between 1800 to 2020")
       .max(2020, "Year must be between 1800 to 2020")
@@ -14,10 +27,17 @@ const CreateMovie = ({ history }) => {
       .required("Please enter a budget")
   });
 
-  const SaveMovie = movie => {
-    const movies = JSON.parse(localStorage.getItem("movies") || "[]");
-    movies.push(movie);
-    localStorage.setItem("movies", JSON.stringify(movies));
+  const onGenreChange = (id, checked) => {
+    if (checked) {
+      if (!genres.includes(id)) setGenres([...genres, id]);
+    } else {
+      setGenres([
+        genres.filter(genre => {
+          return genre !== id;
+        })
+      ]);
+    }
+    console.log(genres);
   };
 
   return (
@@ -28,17 +48,18 @@ const CreateMovie = ({ history }) => {
       <div className="ui segment">
         <Formik
           initialValues={{
-            name: "",
+            title: "",
             year: "",
-            budget: ""
+            budget: "",
           }}
           onSubmit={values => {
             const movie = {
-              Name: values.name,
-              Year: values.year,
-              Budget: values.budget
+              title: values.title,
+              year: values.year,
+              budget: values.budget,
+              category_ids: genres
             };
-            SaveMovie(movie);
+            createMovie(movie);
             history.push("/");
           }}
           validationSchema={ValidationSchema}
@@ -51,17 +72,15 @@ const CreateMovie = ({ history }) => {
                   <div className="field">
                     <label>Name</label>
                     <input
-                      name="name"
+                      name="title"
                       type="text"
                       placeholder="Enter Movie Name .."
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.name}
                     />
-                    <ErrorMessage name="name">
-                      {msg => (
-                        <div classNameName="error error-message">{msg}</div>
-                      )}
+                    <ErrorMessage name="title">
+                      {msg => <div className="error error-message">{msg}</div>}
                     </ErrorMessage>
                   </div>
                   <div className="field">
@@ -77,14 +96,12 @@ const CreateMovie = ({ history }) => {
                       value={values.year}
                     />
                     <ErrorMessage name="year">
-                      {msg => (
-                        <div classNameName="error error-message">{msg}</div>
-                      )}
+                      {msg => <div className="error error-message">{msg}</div>}
                     </ErrorMessage>
                   </div>
                 </div>
                 <div className="two fields">
-                  <div className="  field ">
+                  <div className="field">
                     <label>Budget</label>
                     <div className="ui input icon">
                       <input
@@ -96,15 +113,37 @@ const CreateMovie = ({ history }) => {
                         onBlur={handleBlur}
                         value={values.budget}
                       />
-                      <i class="circular dollar sign icon"></i>
+                      <i className="circular dollar sign icon"></i>
                     </div>
                     <ErrorMessage name="budget">
-                      {msg => (
-                        <div classNameName="error error-message">{msg}</div>
-                      )}
+                      {msg => <div className="error error-message">{msg}</div>}
                     </ErrorMessage>
                   </div>
+
+                  <div className="field">
+                    <label>Genres</label>
+                    {categories.map(category => {
+                      return (
+                        <div
+                          className="ui checkbox"
+                          style={{ margin: 10 }}
+                          key={category.id}
+                        >
+                          <input
+                            id={category.id}
+                            type="checkbox"
+                            name="genere"
+                            onChange={event => {
+                              onGenreChange(category.id, event.target.checked);
+                            }}
+                          />
+                          <label>{category.title}</label>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
+
                 <div className="ui container center aligned">
                   <button className="ui primary button" type="submit">
                     Submit
