@@ -1,15 +1,19 @@
 import React from "react";
-import { Link } from "react-router-dom";
 
 import { useDeleteMovieHook } from "../../hooks";
 
-const MovieCard = ({ movie }) => {
+const MovieCard = ({ movie, history }) => {
   const { deleteMovie } = useDeleteMovieHook();
-  
+
   const DeleteMovie = () => {
     if (window.confirm(`Are you sure you want to delete ${movie.title} ?`)) {
       deleteMovie(movie.id);
     }
+  };
+
+  const EditMovie = () => {
+    localStorage.setItem("movie", JSON.stringify(movie));
+    history.push(`/Edit/${movie.id}`);
   };
   return (
     <div className="three wide column" style={{ textAlign: "center" }}>
@@ -19,9 +23,7 @@ const MovieCard = ({ movie }) => {
           <span
             data-tooltip="Edit"
             data-position="left center"
-            onClick={() => {
-              alert("hi");
-            }}
+            onClick={() => EditMovie()}
           >
             <i className="pencil alternate icon"></i>
           </span>

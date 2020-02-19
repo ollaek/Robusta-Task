@@ -1,19 +1,27 @@
 import React, { useEffect, useState } from "react";
+
 import { Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
-import { useCreateMovieHook, useCategoriesHook } from "../../hooks";
+import { useCategoriesHook, useEditMovieHook } from "../../hooks";
 
-const CreateMovie = ({ history }) => {
-  const { createMovie } = useCreateMovieHook();
+const MovieDetails = props => {
   const { categories, getCategories } = useCategoriesHook();
-  const [genres, setGenres] = useState([]);
+  const { editMovie } = useEditMovieHook();
+  const movieId = props.match.params.id;
+  const movie = JSON.parse(localStorage.getItem("movie"));
+  const [genres, setGenres] = useState(movie.category_ids);
+
   useEffect(
     () => {
+      if (movieId) {
+        //GET MOVIE BY ID
+        //as per my email , the api is not working as the screenshoot shows
+        //so i managed the data preview by storing the movie in local storage
+      }
       getCategories();
     },
     // eslint-disable-next-line
-
     []
   );
   const ValidationSchema = Yup.object().shape({
@@ -47,9 +55,9 @@ const CreateMovie = ({ history }) => {
       <div className="ui segment">
         <Formik
           initialValues={{
-            title: "",
-            year: "",
-            budget: "",
+            title: movie.title,
+            year: movie.year,
+            budget: movie.budget
           }}
           onSubmit={values => {
             const movie = {
@@ -58,8 +66,8 @@ const CreateMovie = ({ history }) => {
               budget: values.budget,
               category_ids: genres
             };
-            createMovie(movie);
-            history.push("/");
+            editMovie(movieId, movie);
+            props.history.push("/");
           }}
           validationSchema={ValidationSchema}
         >
@@ -76,7 +84,7 @@ const CreateMovie = ({ history }) => {
                       placeholder="Enter Movie Name .."
                       onChange={handleChange}
                       onBlur={handleBlur}
-                      value={values.name}
+                      value={values.title}
                     />
                     <ErrorMessage name="title">
                       {msg => <div className="error error-message">{msg}</div>}
@@ -135,6 +143,7 @@ const CreateMovie = ({ history }) => {
                             onChange={event => {
                               onGenreChange(category.id, event.target.checked);
                             }}
+                            checked={genres.includes(category.id)}
                           />
                           <label>{category.title}</label>
                         </div>
@@ -157,4 +166,4 @@ const CreateMovie = ({ history }) => {
   );
 };
 
-export default CreateMovie;
+export default MovieDetails;

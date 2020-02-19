@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import MovieCard from "./MovieCard";
 import { useMoviesHook } from "../../hooks";
 
-const MoviesList = () => {
+const MoviesList = ({history}) => {
   const { movies, getMovies } = useMoviesHook();
 
   useEffect(
@@ -21,7 +21,7 @@ const MoviesList = () => {
           {movies.map(movie => {
             return (
               
-                <MovieCard movie={movie} key={movie.id} />
+                <MovieCard movie={movie} key={movie.id} history={history}/>
                 
             );
           })}
