@@ -30,7 +30,11 @@ const moviesApi = {
       })
       .then(res => {
         return res.data;
-      })
+      }),
+  searchMovies: term =>
+    baseApi.get(`movies?search=${term}`).then(res => {
+      return res.data;
+    })
 };
 
 export { moviesApi };

@@ -1,11 +1,15 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import MovieCard from "./MovieCard";
+import SearchForm from "../Shared/SearchForm";
+import YearsFilteration from "../Shared/YearsFilteration";
 import { useMoviesHook } from "../../hooks";
 
-const MoviesList = ({history}) => {
-  const { movies, getMovies } = useMoviesHook();
+const MoviesList = ({ history }) => {
+  const { movies, totalMovies, getMovies } = useMoviesHook();
 
+  const [term, setTerm] = useState("");
+  let years = [];
   useEffect(
     () => {
       getMovies();
@@ -14,16 +18,25 @@ const MoviesList = ({history}) => {
     []
   );
 
+  const onSearchSubmit = () => {
+    getMovies(term);
+  };
+
+  const FillYearsList = () => {
+    totalMovies.map(movie => {
+      if (!years.includes(movie.year)) {
+        years.push(movie.year);
+      }
+    });
+  };
+
   const RenderList = () => {
     if (movies.length > 0) {
+      FillYearsList();
       return (
-        <div className="ui grid ">
+        <div className="ui grid " style={{marginTop:20}}>
           {movies.map(movie => {
-            return (
-              
-                <MovieCard movie={movie} key={movie.id} history={history}/>
-                
-            );
+            return <MovieCard movie={movie} key={movie.id} history={history} />;
           })}
         </div>
       );
@@ -45,6 +58,17 @@ const MoviesList = ({history}) => {
           <i className="right plus icon"></i>
           add
         </Link>
+        <SearchForm
+          onSearchSubmit={() => onSearchSubmit()}
+          onSetTerm={searchTerm => setTerm(searchTerm)}
+        />
+        <YearsFilteration
+          years={years}
+          onChangeSelect={value => {
+            debugger;
+            getMovies("", +value);
+          }}
+        />
       </div>
       {movies && RenderList()}
     </div>
